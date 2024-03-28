@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"cmp"
+	"encoding/json"
 	"fmt"
 	"image/jpeg"
 	"log"
@@ -13,6 +14,11 @@ import (
 	"github.com/disintegration/imaging"
 	"gopkg.in/telebot.v3"
 )
+
+var DEBUG = func() bool {
+	_, debug := os.LookupEnv("DEBUG")
+	return debug
+}()
 
 func runTeleBot() {
 	pref := telebot.Settings{
@@ -27,6 +33,16 @@ func runTeleBot() {
 	}
 
 	b.Handle("shaba", func(ctx telebot.Context) error {
+		if DEBUG {
+			fmt.Println("DEBUG shaba ctx ...")
+			ctxJson, err := json.Marshal(ctx)
+			if err != nil {
+				fmt.Println("DEBUG error:", err.Error())
+			} else {
+				fmt.Printf("%s\n", ctxJson)
+			}
+		}
+
 		shaba := ctx.Message().Payload
 
 		// validate shaba
@@ -35,6 +51,16 @@ func runTeleBot() {
 	})
 
 	b.Handle(telebot.OnPhoto, func(ctx telebot.Context) error {
+		if DEBUG {
+			fmt.Println("DEBUG photo ctx ...")
+			ctxJson, err := json.Marshal(ctx)
+			if err != nil {
+				fmt.Println("DEBUG error:", err.Error())
+			} else {
+				fmt.Printf("%s\n", ctxJson)
+			}
+		}
+
 		photo := ctx.Message().Photo
 		if photo == nil {
 			return ctx.Send("This is not a photo")
@@ -60,7 +86,9 @@ func runTeleBot() {
 	})
 
 	b.Handle("/hello", func(c telebot.Context) error {
-		fmt.Println("new /hello request")
+		if DEBUG {
+			fmt.Println("new /hello request")
+		}
 
 		fname := c.Sender().FirstName
 		uname := c.Sender().Username
@@ -69,7 +97,9 @@ func runTeleBot() {
 	})
 
 	b.Handle("/bye", func(c telebot.Context) error {
-		fmt.Println("new /bye request")
+		if DEBUG {
+			fmt.Println("new /bye request")
+		}
 
 		fname := c.Sender().FirstName
 		uname := c.Sender().Username
@@ -78,7 +108,9 @@ func runTeleBot() {
 	})
 
 	b.Handle("/foo", func(c telebot.Context) error {
-		fmt.Println("new /foo request")
+		if DEBUG {
+			fmt.Println("new /foo request")
+		}
 
 		fname := c.Sender().FirstName
 		uname := c.Sender().Username
@@ -90,6 +122,8 @@ func runTeleBot() {
 }
 
 func init() {
+	fmt.Println("DEBUG is enabled:", DEBUG)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "success")
 	})
