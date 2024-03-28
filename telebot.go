@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -20,32 +19,40 @@ func runTeleBot() {
 		return
 	}
 
-	b.Handle("/hello", func(c tele.Context) error {
-		fmt.Println("new /hello request")
+	b.Handle("shaba", func(ctx tele.Context) error {
+		shaba := ctx.Message().Payload
 
-		fname := c.Sender().FirstName
-		uname := c.Sender().Username
+		// validate shaba
 
-		return c.Send(fmt.Sprintf("Hi %s (%s)", fname, uname))
+		return ctx.Send("your shaba is ", shaba)
 	})
 
-	b.Handle("/bye", func(c tele.Context) error {
-		fmt.Println("new /bye request")
+	// b.Handle("/hello", func(c tele.Context) error {
+	// 	fmt.Println("new /hello request")
 
-		fname := c.Sender().FirstName
-		uname := c.Sender().Username
+	// 	fname := c.Sender().FirstName
+	// 	uname := c.Sender().Username
 
-		return c.Send(fmt.Sprintf("Bye %s (%s)", fname, uname))
-	})
+	// 	return c.Send(fmt.Sprintf("Hi %s (%s)", fname, uname))
+	// })
 
-	b.Handle("/foo", func(c tele.Context) error {
-		fmt.Println("new /foo request")
+	// b.Handle("/bye", func(c tele.Context) error {
+	// 	fmt.Println("new /bye request")
 
-		fname := c.Sender().FirstName
-		uname := c.Sender().Username
+	// 	fname := c.Sender().FirstName
+	// 	uname := c.Sender().Username
 
-		return c.Send(fmt.Sprintf("This is foo %s (%s)", fname, uname))
-	})
+	// 	return c.Send(fmt.Sprintf("Bye %s (%s)", fname, uname))
+	// })
+
+	// b.Handle("/foo", func(c tele.Context) error {
+	// 	fmt.Println("new /foo request")
+
+	// 	fname := c.Sender().FirstName
+	// 	uname := c.Sender().Username
+
+	// 	return c.Send(fmt.Sprintf("This is foo %s (%s)", fname, uname))
+	// })
 
 	b.Start()
 }
