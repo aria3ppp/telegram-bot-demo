@@ -2,9 +2,12 @@ package main
 
 import (
 	"bytes"
+	"cmp"
 	"fmt"
 	"image/jpeg"
 	"log"
+	"net/http"
+	"os"
 	"time"
 
 	"github.com/disintegration/imaging"
@@ -84,4 +87,11 @@ func runTeleBot() {
 	})
 
 	b.Start()
+}
+
+func init() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "success")
+	})
+	go http.ListenAndServe(":"+cmp.Or(os.Getenv("PORT"), "8080"), nil)
 }
